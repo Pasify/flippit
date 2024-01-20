@@ -1,20 +1,53 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  TextInput,
+  Switch,
+} from "react-native";
 
-export default function App() {
+import WelcomeScreen from "./app/screens/WelcomeScreen";
+import Card from "./app/components/Card";
+import ListingDetailsScreen from "./app/screens/ListingDetailsScreen";
+import ViewImageScreen from "./app/screens/ViewImageScreen";
+import MessagesScreen from "./app/screens/MessagesScreen";
+import ScreenView from "./app/components/ScreenView";
+import Icon from "./app/components/Icon";
+import ListItem from "./app/components/ListItem";
+import AccountScreen from "./app/screens/AccountScreen";
+import ListingsScreen from "./app/screens/ListingsScreen";
+import { useState } from "react";
+import AppTextInput from "./app/components/AppTextInput";
+import AppPicker from "./app/components/AppPicker";
+
+const categories = [
+  { label: "furniture", value: 1 },
+  { label: "clothing", value: 2 },
+  { label: "camera", value: 3 },
+];
+function App() {
+  const [firstName, setFirstName] = useState("");
+  const [isNew, setIsNew] = useState(false);
+
+  // console.log(require("./app/assets/sofa1.jpg"));
+  // return <WelcomeScreen />;
+  // return <ListingDetailsScreen />;
+  // return <AccountScreen />;
+  // return <ListingsScreen />;
+  const [category, setCategory] = useState(categories[0]);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScreenView>
+      <AppPicker
+        items={categories}
+        placeholder="category"
+        icon="apps"
+        selectedItem={category}
+        onSelectItem={(item) => setCategory(item)}
+      />
+      <AppTextInput placeholder="email" icon="email" />
+    </ScreenView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
