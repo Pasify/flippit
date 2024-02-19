@@ -8,15 +8,24 @@ import {
   Button,
   FlatList,
 } from "react-native";
+import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native";
 import defaultStyles from "../config/styles";
 import AppText from "./AppText";
-import { useState } from "react";
 import ScreenView from "./ScreenView";
 import ListItem from "./ListItem";
 import PickerItem from "./PickerItem";
-function AppPicker({ icon, placeholder, items, onSelectItem, selectedItem }) {
+function AppPicker({
+  icon,
+  items,
+  numberOfColumns = 1,
+  placeholder,
+  onSelectItem,
+  selectedItem,
+  PickerItemComponent = PickerItem,
+  width = "100%",
+}) {
   const [modalVisible, setModalVisible] = useState(false);
   function handleVisibility() {
     setModalVisible((prev) => !prev);
@@ -24,7 +33,7 @@ function AppPicker({ icon, placeholder, items, onSelectItem, selectedItem }) {
   return (
     <>
       <TouchableWithoutFeedback onPress={handleVisibility}>
-        <View style={styles.container}>
+        <View style={[styles.container, { width }]}>
           {icon && (
             <MaterialCommunityIcons
               name={icon}
@@ -33,9 +42,13 @@ function AppPicker({ icon, placeholder, items, onSelectItem, selectedItem }) {
               style={styles.icon}
             />
           )}
-          <AppText style={styles.text}>
-            {selectedItem ? selectedItem.label : placeholder}
-          </AppText>
+
+          {selectedItem ? (
+            <AppText style={styles.text}>{selectedItem.label}</AppText>
+          ) : (
+            <AppText style={styles.placeholder}>{placeholder}</AppText>
+          )}
+
           <MaterialCommunityIcons
             name="chevron-down"
             size={20}
@@ -50,8 +63,10 @@ function AppPicker({ icon, placeholder, items, onSelectItem, selectedItem }) {
           <FlatList
             data={items}
             keyExtractor={(item) => item.value.toString()}
+            numColumns={numberOfColumns}
             renderItem={({ item }) => (
-              <PickerItem
+              <PickerItemComponent
+                item={item}
                 label={item.label}
                 onPress={() => {
                   handleVisibility();
@@ -76,11 +91,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: "center",
   },
-  text: {
-    flex: 1,
-  },
   icon: {
     marginRight: 10,
+  },
+  placeholder: {
+    color: defaultStyles.colors.medium,
+    flex: 1,
+  },
+  text: {
+    flex: 1,
   },
 });
 export default AppPicker;
